@@ -10,5 +10,7 @@ public interface ProblemService {
 
     ProblemDTO updateProblem(ProblemDTO problem);
 
+    void deleteProblem(String vin);
+
     ProblemDTO getProblemById(String vin);
 }

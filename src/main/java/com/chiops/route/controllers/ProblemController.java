@@ -45,6 +45,17 @@ public class ProblemController {
         }
     }
 
+    @Delete("/delete/{vin}")
+    public void deleteProblem(@PathVariable String vin) {
+        try {
+            problemService.deleteProblem(vin);
+        } catch (BadRequestException e) {
+            throw new BadRequestException("Error de solicitud al eliminar el problema: " + e.getMessage());
+        } catch (InternalServerException e) {
+            throw new InternalServerException("Error interno al eliminar el problema: " + e.getMessage());
+        }
+    }
+
     @Get("/get/{vin}")
     public ProblemDTO getProblemById(@PathVariable String vin) {
         try {

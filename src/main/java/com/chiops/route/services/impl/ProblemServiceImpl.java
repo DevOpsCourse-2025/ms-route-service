@@ -57,6 +57,21 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
+    public void deleteProblem(String vin) {
+        Route route = routeRepository.findByVehicleVin(vin)
+                .orElseThrow(() -> new NotFoundException("Route not found: " + vin));
+        
+        if (route.getProblem() == null) {
+            throw new ConflictException("No problem assigned to this route: " + vin);
+        }
+        
+        Problem problem = route.getProblem();
+        route.setProblem(null);
+        routeRepository.update(route);
+        problemRepository.delete(problem);
+    }
+
+    @Override
     public ProblemDTO getProblemById(String vin) {
         Route route = routeRepository.findByVehicleVin(vin)
                 .orElseThrow(() -> new NotFoundException("Route not found: " + vin));
