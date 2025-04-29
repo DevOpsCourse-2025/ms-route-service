@@ -40,6 +40,25 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
+    public RouteDTO updateRoute(RouteDTO routeDTO) {
+        Route existingRoute = routesRepository.findByVehicleVin(routeDTO.getVehicleVin())
+                .orElseThrow(() -> new NotFoundException("Route with VIN " + routeDTO.getVehicleVin() + " not found"));
+
+        if (routeDTO.getVehicleVin() != null &&
+                !routeDTO.getVehicleVin().equals(existingRoute.getVehicleVin())) {
+            throw new BadRequestException("Vehicle VIN cannot be changed");
+        }
+
+
+        if (vehicleAssignmentClient.findByVin(routeDTO.getVehicleVin()).isEmpty()) {
+            throw new ConflictException("Vehicle with VIN " + routeDTO.getVehicleVin() + " is not assigned to any driver");
+        }
+
+        updateRouteFields(existingRoute, routeDTO);
+        return routeToDto(routesRepository.update(existingRoute));
+    }
+
+    @Override
     public RouteDTO deleteRoute(String vin) {
         Route route = routesRepository.findByVehicleVin(vin)
                 .orElseThrow(() -> new NotFoundException("Route with VIN " + vin + " not found"));
