@@ -39,6 +39,19 @@ public class RouteServiceImpl implements RouteService {
         return routeToDto(routesRepository.save(route));
     }
 
+    @Override
+    public RouteDTO deleteRoute(String vin) {
+        Route route = routesRepository.findByVehicleVin(vin)
+                .orElseThrow(() -> new NotFoundException("Route with VIN " + vin + " not found"));
+
+
+        if (vehicleAssignmentClient.findByVin(route.getVehicleVin()).isEmpty()) {
+            throw new ConflictException("Vehicle with VIN " + route.getVehicleVin() + " is not assigned to any driver");
+        }
+
+        routesRepository.delete(route);
+        return routeToDto(route);
+    }
 
     @Override
     public RouteDTO getRouteByVehicleVin(String vin) {

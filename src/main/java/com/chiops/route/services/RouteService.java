@@ -10,6 +10,8 @@ public interface RouteService {
 
     RouteDTO createRoute(RouteDTO routeDTO);
 
+    RouteDTO deleteRoute(String name);
+
     RouteDTO getRouteByVehicleVin(String vin);
 
     List<RouteDTO> getAllRoutes();
