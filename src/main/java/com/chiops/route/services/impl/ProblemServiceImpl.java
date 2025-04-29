@@ -43,6 +43,20 @@ public class ProblemServiceImpl implements ProblemService {
     }
 
     @Override
+    public ProblemDTO updateProblem(ProblemDTO problem) {
+        if (routeRepository.findByVehicleVin(problem.getVin()).isEmpty()) {
+            throw new NotFoundException("Route not found for this vehicle: " + problem.getVin());
+        }
+
+        Problem problemEntity = new Problem();
+        problemEntity.setDescription(problem.getDescription());
+        problemEntity.setComment(problem.getComment());
+        problemEntity.setName(problem.getName());
+
+        return problemToDto(problemRepository.update(problemEntity));
+    }
+
+    @Override
     public ProblemDTO getProblemById(String vin) {
         Route route = routeRepository.findByVehicleVin(vin)
                 .orElseThrow(() -> new NotFoundException("Route not found: " + vin));

@@ -34,6 +34,17 @@ public class ProblemController {
         }
     }
 
+    @Put("/update")
+    public ProblemDTO updateProblem(@Body ProblemDTO problem) {
+        try {
+            return problemService.updateProblem(problem);
+        } catch (BadRequestException e) {
+            throw new BadRequestException("Error de solicitud al actualizar el problema: " + e.getMessage());
+        } catch (InternalServerException e) {
+            throw new InternalServerException("Error interno al actualizar el problema: " + e.getMessage());
+        }
+    }
+
     @Get("/get/{vin}")
     public ProblemDTO getProblemById(@PathVariable String vin) {
         try {

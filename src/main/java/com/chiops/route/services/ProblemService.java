@@ -8,5 +8,7 @@ public interface ProblemService {
 
     ProblemDTO assignProblem(ProblemDTO problem);
 
+    ProblemDTO updateProblem(ProblemDTO problem);
+
     ProblemDTO getProblemById(String vin);
 }
