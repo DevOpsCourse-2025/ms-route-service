@@ -17,11 +17,13 @@ public class VehicleAssignmentDTO {
 
     private LocalDateTime releasedAt;
 
+    @NotBlank
     private String status;
 
     @NotBlank
     private String vin;
 
+    @NotBlank
     private String changedDriverCurp;
 
     public VehicleAssignmentDTO() {

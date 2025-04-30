@@ -13,7 +13,8 @@ public class ProblemDTO {
 
     @NotBlank
     private String description;
-
+    
+    @NotBlank
     private String vin;
 
     private String comment;
