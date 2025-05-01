@@ -22,8 +22,11 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Override
     public ProblemDTO assignProblem(ProblemDTO problem) {
+        if(problem.getName().isEmpty() || problem.getDescription().isEmpty() || problem.getVin().isEmpty()){
+            throw new BadRequestException("The field of Name, description and vin are OBLIGATORY");
+        }
         Route route = routeRepository.findByVehicleVin(problem.getVin())
-                .orElseThrow(() -> new NotFoundException("Route not found: " + problem.getVin()));
+                .orElseThrow(() -> new BadRequestException("Route not found for this vehicle, the vin filed is incorrect: " + problem.getVin()));
 
         if (route.getProblem() != null) {
             throw new ConflictException("Problem already exists for this route: " + problem.getVin());
@@ -44,8 +47,11 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Override
     public ProblemDTO updateProblem(ProblemDTO problem) {
+        if(problem.getName().isEmpty() || problem.getDescription().isEmpty() || problem.getVin().isEmpty()){
+            throw new BadRequestException("The field of Name, description and vin are OBLIGATORY");
+        }
         if (routeRepository.findByVehicleVin(problem.getVin()).isEmpty()) {
-            throw new NotFoundException("Route not found for this vehicle: " + problem.getVin());
+            throw new BadRequestException("Route not found for this vehicle, the vin filed is incorrect: " + problem.getVin());
         }
 
         Problem problemEntity = new Problem();
@@ -58,8 +64,14 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Override
     public void deleteProblem(String vin) {
+
+        if (vin == null || vin.isBlank()) {
+            throw new BadRequestException("vin as parameter is obligatory");
+        }
+
+    
         Route route = routeRepository.findByVehicleVin(vin)
-                .orElseThrow(() -> new NotFoundException("Route not found: " + vin));
+                .orElseThrow(() -> new BadRequestException("Route not found for this vehicle, the vin filed is incorrect: " + vin));
         
         if (route.getProblem() == null) {
             throw new ConflictException("No problem assigned to this route: " + vin);
@@ -73,8 +85,12 @@ public class ProblemServiceImpl implements ProblemService {
 
     @Override
     public ProblemDTO getProblemById(String vin) {
+        if (vin == null || vin.isBlank()) {
+            throw new BadRequestException("vin as parameter is obligatory");
+        }
+
         Route route = routeRepository.findByVehicleVin(vin)
-                .orElseThrow(() -> new NotFoundException("Route not found: " + vin));
+                .orElseThrow(() -> new BadRequestException("Route not found for this vehicle, the vin filed is incorrect: " + vin));
         
         if (route.getProblem() == null) {
             throw new NotFoundException("No problem assigned to this route: "+ vin);

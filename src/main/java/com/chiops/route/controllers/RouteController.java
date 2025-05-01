@@ -80,14 +80,4 @@ public class RouteController {
             throw new InternalServerException("Error interno al obtener la ruta por VIN: " + e.getMessage());
         }
     }
-
-    @Error(status = HttpStatus.NOT_FOUND, global = true)
-    public HttpResponse<ErrorResponse> handleNotFound(HttpRequest<?> request) {
-        throw new NotFoundException("Endpoint " + request.getPath() + " no encontrado");
-    }
-
-    @Error(status = HttpStatus.METHOD_NOT_ALLOWED, global = true)
-    public HttpResponse<ErrorResponse> handleMethodNotAllowed(HttpRequest<?> request) {
-        throw new MethodNotAllowedException("Método " + request.getMethod() + " no permitido para " + request.getPath());
-    }
 }

@@ -7,11 +7,15 @@ import com.chiops.route.libs.dtos.RouteDTO;
 import com.chiops.route.libs.exceptions.exception.*;
 import com.chiops.route.repositories.RoutesRepository;
 import com.chiops.route.services.RouteService;
+
+import io.micronaut.validation.Validated;
 import jakarta.inject.Singleton;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
 
+@Validated
 @Singleton
 public class RouteServiceImpl implements RouteService {
 
@@ -25,7 +29,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public RouteDTO createRoute(RouteDTO routeDTO) {
+    public RouteDTO createRoute(@Valid RouteDTO routeDTO) {
 
         if (vehicleAssignmentClient.findByVin(routeDTO.getVehicleVin()).isEmpty()) {
             throw new ConflictException("Vehicle with VIN " + routeDTO.getVehicleVin() + " is not assigned to any driver");
@@ -40,7 +44,7 @@ public class RouteServiceImpl implements RouteService {
     }
 
     @Override
-    public RouteDTO updateRoute(RouteDTO routeDTO) {
+    public RouteDTO updateRoute(@Valid RouteDTO routeDTO) {
         Route existingRoute = routesRepository.findByVehicleVin(routeDTO.getVehicleVin())
                 .orElseThrow(() -> new NotFoundException("Route with VIN " + routeDTO.getVehicleVin() + " not found"));
 
@@ -61,7 +65,7 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public RouteDTO deleteRoute(String vin) {
         Route route = routesRepository.findByVehicleVin(vin)
-                .orElseThrow(() -> new NotFoundException("Route with VIN " + vin + " not found"));
+                .orElseThrow(() -> new BadRequestException("Route with VIN " + vin + " is incorrect"));
 
 
         if (vehicleAssignmentClient.findByVin(route.getVehicleVin()).isEmpty()) {

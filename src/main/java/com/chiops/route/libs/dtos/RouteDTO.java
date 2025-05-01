@@ -2,6 +2,8 @@ package com.chiops.route.libs.dtos;
 
 import io.micronaut.core.annotation.Introspected;
 import io.micronaut.serde.annotation.Serdeable;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -9,14 +11,21 @@ import java.time.LocalDateTime;
 @Introspected
 @Serdeable
 public class RouteDTO {
-
+    @NotBlank
     private String routeName;
+    @NotBlank
     private String vehicleVin;
+    @NotNull
     private LocalDateTime travelDate;
+    @NotNull
     private LocalDateTime creationDate;
+    @NotNull
     private BigDecimal startLatitude;
+    @NotNull
     private BigDecimal startLongitude;
+    @NotNull
     private BigDecimal endLatitude;
+    @NotNull
     private BigDecimal endLongitude;
     private String name;
     private String description;
